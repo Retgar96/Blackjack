@@ -1,4 +1,3 @@
 # Blackjack
-# test
 
-Point of entry in manager
+##Point of entry in manager
