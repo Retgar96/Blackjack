@@ -1,4 +1,4 @@
-from output_func import output, my_input, out_red, out_green
+from output_func import output, my_input, out_red, out_green, my_input_player_action
 
 
 def start_game():
@@ -33,7 +33,7 @@ def view_table(table):
 
 
 def action_bar():
-    return bool(my_input('Взять ещё карту - 1 \n Хватит - 0'))
+    return bool(my_input_player_action('Взять ещё карту - 1 \n Хватит - 0'))
 
 
 def win_action(bet, bank):
