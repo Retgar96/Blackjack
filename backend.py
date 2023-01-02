@@ -56,15 +56,6 @@ class GameTable:
     def add_card_dealer(self):
         self.dealer_card.append(self.deck.get_card())
 
-    # @staticmethod
-    # def __calculate_score(cards):
-    #     result = 0
-    #     for card in cards:
-    #         if card['name'] == 'T' and (result + 11) > 21:
-    #             result = result + 1
-    #         else:
-    #             result = result + card['value']
-    #     return result
     @staticmethod
     def __calculate_score(cards):
         result = 0

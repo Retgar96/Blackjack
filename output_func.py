@@ -18,7 +18,11 @@ def my_input(text):
     try:
         value = int(input(f'{text}\n'))
     except ValueError:
-        output('Пожалуйста введите целое число!')
+        output('Пожалуйста введите целое положительное число!')
         my_input(text)
     else:
-        return value
+        if value > 0:
+            return value
+        else:
+            output('Пожалуйста введите целое положительное число!')
+            my_input(text)
