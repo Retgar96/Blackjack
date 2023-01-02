@@ -1,4 +1,4 @@
-from output_func import output, my_input, out_red, out_green, my_input_player_action
+from output_func import output, my_input, out_red, out_green, input_player_action
 
 
 def start_game():
@@ -14,8 +14,7 @@ def get_bet():
 
 
 def error_message(type_error):
-    if type_error == 'Bet exceeded':
-        output('Превышена сумма ставки!')
+    out_red(type_error)
 
 
 def view_table(table):
@@ -23,9 +22,9 @@ def view_table(table):
     dealer_card = []
     player_card = []
     for card in table['dealer']['card']:
-        dealer_card.append(card['name'])
+        dealer_card.append(card.name)
     for card in table['player']['card']:
-        player_card.append(card['name'])
+        player_card.append(card.name)
 
     output(f'Карта диллера: {dealer_card}: score: {table["dealer"]["score"]}')
     output(f'Ваши карты: {player_card} Ваш счет: {table["player"]["score"]}')
@@ -33,16 +32,16 @@ def view_table(table):
 
 
 def action_bar():
-    return bool(my_input_player_action('Взять ещё карту - 1 \n Хватит - 0'))
+    return input_player_action('Взять ещё карту - 1 \n Хватит - 0')
 
 
 def win_action(bet, bank):
     out_green(f'Вы выйграли {bet}. Ваш баланс состовялет: {bank}')
 
 
-def losse_action(bet, bank):
+def lose_action(bet, bank):
     out_red(f'Ваша ставка проиграла -{bet}. Ваш баланс состовляет: {bank}')
 
 
-def full_losse():
-    out_red(f'Вы проиграли игру, попробуйте ещё раз')
+def full_lose():
+    out_red('Вы проиграли игру, попробуйте ещё раз')

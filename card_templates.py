@@ -1,41 +1,24 @@
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class Сard:
+    name: str
+    value: int
+
+
 template = [
-    {'name': 'A',
-     'value': 11
-     },
-    {'name': '2',
-     'value': 2
-     },
-    {'name': '3',
-     'value': 3
-     },
-    {'name': '4',
-     'value': 4
-     },
-    {'name': '5',
-     'value': 5
-     },
-    {'name': '6',
-     'value': 6
-     },
-    {'name': '7',
-     'value': 7
-     },
-    {'name': '8',
-     'value': 8
-     },
-    {'name': '9',
-     'value': 9
-     },
-    {'name': '10',
-     'value': 10
-     },
-    {'name': 'J',
-     'value': 10
-     },
-    {'name': 'Q',
-     'value': 10
-     },
-    {'name': 'K',
-     'value': 10
-     }
+     Сard(name='A', value=11),
+     Сard(name='2', value=2),
+     Сard(name='3', value=3),
+     Сard(name='4', value=4),
+     Сard(name='5', value=5),
+     Сard(name='6', value=6),
+     Сard(name='7', value=7),
+     Сard(name='8', value=8),
+     Сard(name='9', value=9),
+     Сard(name='10', value=10),
+     Сard(name='J', value=10),
+     Сard(name='D', value=10),
+     Сard(name='K', value=10),
 ]
