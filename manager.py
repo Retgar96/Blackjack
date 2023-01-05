@@ -90,5 +90,7 @@ def set_tabler_info(game_table):
     return table
 
 
+
+
 if __name__ == '__main__':
     start()
