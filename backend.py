@@ -80,16 +80,26 @@ class GameTable:
 
 
 class Deck:
+    __isInstance = False
+
     def __init__(self):
-        self.cards = self.create_deck()
+        self.__cards = self.__create_deck()
+
+    def __new__(cls, *args, **kwargs):
+        if not cls.__isInstance:
+            cls.__isInstance = super().__new__(cls)
+        return cls.__isInstance
+
+    def __del__(cls):
+        cls.__isInstance = False
 
     def get_card(self):
-        if len(self.cards) < (settings.COUNT_CARD_IN_STANDART_DECK * settings.COUNT_DECKS / 2):
-            self.cards = self.create_deck()
-        return self.cards.pop(0)
+        if len(self.__cards) < (settings.COUNT_CARD_IN_STANDART_DECK * settings.COUNT_DECKS / 2):
+            self.__cards = self.__create_deck()
+        return self.__cards.pop(0)
 
     @staticmethod
-    def create_deck():
+    def __create_deck():
         cards = []
         for card in template_deck:
             for _ in range(settings.COUNT_DECKS * 4):
