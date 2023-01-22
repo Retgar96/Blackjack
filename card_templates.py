@@ -29,6 +29,17 @@ class Hand:
         self.__cards: list = []
         self.__value: int = 0
 
+    def __add__(self, other):
+        if isinstance(other, Сard):
+            self.cards.append(other)
+            self.__calculate_score()
+        else:
+            raise TypeError('Класть в руку можно только карты')
+        return self
+
+    def __str__(self):
+        return f'{self.cards} score: {self.value}'
+
     @property
     def cards(self):
         return self.__cards
@@ -37,23 +48,7 @@ class Hand:
     def value(self):
         return self.__value
 
-    @value.setter
-    def value(self, value):
-        if isinstance(value, int):
-            self.__value = value
-
-    def __add__(self, other):
-        if isinstance(other, Сard):
-            self.cards.append(other)
-            self.calculate_score()
-        else:
-            raise TypeError('Класть в руку можно только карты')
-        return self
-
-    def __str__(self):
-        return f'{self.cards} score: {self.value}'
-
-    def calculate_score(self):
+    def __calculate_score(self):
         arr_value = []
         for card in self.cards:
             arr_value.append(card.value)
@@ -61,9 +56,7 @@ class Hand:
 
         for value in arr_value:
             if value == 11 and (self.value + 11) > 21:
-                self.value += 1
+                self.__value += 1
             else:
-                self.value += value
-
-
+                self.__value += value
 
