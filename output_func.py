@@ -33,7 +33,7 @@ def my_input(text):
             out_red('Пожалуйста введите целое положительное число!')
             continue
         else:
-            if value >= 0:
+            if value > 0:
                 return value
             else:
                 out_red('Пожалуйста введите целое положительное число!')

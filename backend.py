@@ -1,54 +1,72 @@
 import random
-from abc import ABC, abstractmethod
+from enum import Enum
 
-import card_templates
-from exceptions import BetExcessException, BetNegative
+from exceptions import BetExcessError, BetNegativeError, BetTypeError
 import settings
 from card_templates import template as template_deck, Сard
+from dataclasses import dataclass
 
 
-# class Table(ABC):
-#     players = []
-#     dealer = '_dealer'
-#     deck = '_deck'
-#
-#     @abstractmethod
-#     def qewe(self):
-#         pass
-#
-#
-# class Dealer:
-#     minimum_score = 17
-#     hand = '_Hand'
-#
-#
-#
-#
-# class Round:
-#     table = '_Table'
-#     dealer = '_Dealer'
-#     players = '[]_Player'
+# @dataclass
+# class Status:
+#     overdo :
 
+# class Status(Enum):
+
+
+
+class Score:
+    def __init__(self, value):
+        self._score = value
+
+    @property
+    def score(self):
+        return self._score
+
+    @score.setter
+    def score(self, value):
+        if value < 0:
+            raise ValueError('Значение не может быть')
+        self._score = value
+
+    @property
+    def status(self):
+        if self.score > 21:
+            return 'overdo'
+        if self.score < 0:
+            raise ValueError('Статус не может быть отритцательным')
+        if
 
 class Player:
-    def __new__(cls, bank):
-        if bank < 0 or type(bank) not in ('int', 'float'):
-            raise TypeError('Неверный формат')
-        return super(Player, cls).__new__(cls)
+    # def __new__(cls, bank):
+    #     if type(bank) not in ('int', 'float'):
+    #         pass
+    #     if bank < 1:
+    #         raise TypeError('Банк не может быть меньше меньше 1')
+    #
+    #     return super(Player, cls).__new__(cls)
 
     def __init__(self, bank):
         self._bank = bank
         self.hand = Hand()
-        self.bet = None
+        self.bet: int or float
 
     @property
     def bank(self):
         return self._bank
 
+    @bank.setter
+    def bank(self, value):
+        if type(value) not in ('int', 'float'):
+            raise TypeError('Неверный формат')
+        if value < 1:
+            raise ValueError('Банк не может быть меньше меньше 1')
+        self._bank = value
+
     def __add__(self, other):
         if isinstance(other, int) or isinstance(other, float):
             self._bank += float
-        elif isinstance(other, card_templates.Сard):
+        elif isinstance(other, Сard):
             self.hand = self.hand + other
         return self
 
@@ -60,7 +78,7 @@ class Player:
 
     def __lt__(self, other):
         if isinstance(other, int) or isinstance(other, float):
-            if self._bank < other:
+            if self.bank < other:
                 True
             else:
                 return False
@@ -77,9 +95,9 @@ class Player:
     def __setattr__(self, name, value):
         if name == 'bet':
             if not isinstance(value, int or float) or value > 0:
-                raise Exception.BetExceptions
-            if value > self._bank:
-                raise BetExcessException
+                raise BetTypeError
+            if value > self.bank:
+                raise BetExcessError
             super.__setattr__(self, name, value)
 
     def win(self):
@@ -91,7 +109,7 @@ class Player:
             raise Exception.PlayerLose('Игрок проиграл')
 
 
-class Dealer(Player):
+class Dealer():
     __isInstance = False
 
     def __del__(self):
@@ -102,7 +120,14 @@ class Dealer(Player):
             cls.__isInstance = super().__new__(cls)
         return cls.__isInstance
 
-    def
+    def __init__(self):
+        self.hand: Hand
+
+    def __add__(self, other):
+        return self.hand + other
+
+    def __iadd__(self, other):
+        return self.__add__(other)
 
 
 class Hand:
@@ -117,6 +142,9 @@ class Hand:
         else:
             raise TypeError('Класть в руку можно только карты')
         return self
+
+    def __iadd__(self, other):
+        return self.__add__(other)
 
     def __len__(self):
         return len(self.__cards)
@@ -153,7 +181,7 @@ class Hand:
 
 # class Score:
 #     @staticmethod
-#     def calculate_score(cards):
+#     def calculate(cards):
 #         result = 0
 #         hand_value = []
 #         for card in cards:
@@ -183,14 +211,11 @@ class Table:
     def __init__(self, player: Player):
         self.player = player
         self.deck = Deck()
-        # self.bank = None
-        # self.bet = None
+        self.dealer = Dealer()
         self.hand_dealer = None
-        # self.hand_player = []
 
     def clear_hands(self):
         self.hand_dealer = None
-        # self.hand_player = []
         self.player.hand.clean()
 
     def get_score_player(self):
@@ -202,23 +227,17 @@ class Table:
     def check_21_player(self):
         return self.player.hand == 21
 
-    # def add_bet(self):
-    #     self.player.win()
-
-    # def minus_bet(self):
-    #     self.player.lose()
-
     def check_balance(self):
         return self.player > 0
 
     def check_bet(self):
         if self.bet > self.bank:
-            raise BetExcessException
+            raise BetExcessError
         elif self.bet < 1:
-            raise BetNegative
+            raise BetNegativeError
 
     def deal_cards(self):
-        self.hand_dealer.append(self.deck.get_card())
+        self.hand_dealer + self.deck.get_card()
         for _ in range(settings.STARTED_COUNT_CARD_IN_PLAYER_HAND):
             self.player.hand + self.deck.get_card()
 
@@ -235,23 +254,7 @@ class Table:
         return self.get_score_dealer() < 17
 
     def add_card_dealer(self):
-        self.hand_dealer.append(self.deck.get_card())
-
-    @staticmethod
-    def calculate_score(cards):
-        result = 0
-        hand_value = []
-        for card in cards:
-            hand_value.append(card.value)
-        hand_value.sort()
-
-        for value in hand_value:
-            if value == 11 and (result + 11) > 21:
-                result += 1
-            else:
-                result += value
-
-        return result
+        self.hand_dealer + self.deck.get_card()
 
 
 class Deck:
@@ -283,3 +286,7 @@ class Deck:
                 cards.append(card)
         random.shuffle(cards)
         self.__cards = cards
+
+
+class Rules:
+    pass

@@ -3,29 +3,27 @@ from backend import Table, Player, Hand, Deck
 from exceptions import BetExceptions
 
 
-def start():
-    while True:
-        player = Player(controller.get_bank())
-        table = Table(player)
-        controller.start_game()
-        game = Game(table)
-        game.play_round()
-
-
 class Game:
-    def __init__(self, table: Table):
-        self.table = table
+    def __init__(self):
+        self.table = Table(self.start_game())
+
+    def start_game(self):
+        while True:
+            player = Player(controller.get_bank())
+            controller.start_game()
+            self.table = Table(player)
+            self.play_round()
 
     def play_round(self):
         while True:
-            # if not table.check_balance():
-            #     controller.full_lose()
-            #     break
-            # table.clear_hands()
+            if not self.table.check_balance():
+                controller.full_lose()
+                self.table.clear_hands()
+                break
             try:
                 self.table.player.bet = controller.get_bet()
                 # table.check_bet()
-            except BetExceptions as e:  #### Проверить работоспособность!
+            except BetExceptions as e:
                 controller.error_message(e)
                 continue
 
@@ -55,7 +53,7 @@ class Game:
 
     def action_dealer(self):
         while True:
-            if self.table.check_break(self.dealer): ##### Дописать класс!!!!
+            if self.table.check_break(self.table.hand_dealer): ##### Дописать класс!!!!
                 self.win_player()
                 break
             else:
@@ -64,7 +62,7 @@ class Game:
                     controller.view_table(self.set_tabler_info())
                     continue
                 else:
-                    if self.table.get_score_dealer() > self.table.get_score_player():
+                    if self.table.hand_dealer > self.table.player.hand:
                         self.lose_player()
                         break
                     else:
@@ -91,4 +89,5 @@ class Game:
 
 
 if __name__ == '__main__':
-    start()
+    game = Game()
+    game.start_game()
