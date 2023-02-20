@@ -42,6 +42,7 @@ def action_player(game_table):
             controller.view_table(set_tabler_info(game_table))
             if game_table.check_break_player():
                 lose_player(game_table)
+                break
             else:
                 set_tabler_info(game_table)
                 continue
