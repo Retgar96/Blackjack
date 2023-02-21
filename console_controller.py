@@ -1,4 +1,3 @@
-from backend import Table
 from output_func import output, my_input, out_red, out_green, input_player_action
 
 
@@ -40,8 +39,7 @@ class Controller:
         out_red(f'Ваша ставка проиграла -{table.player.bet}. Ваш баланс состовляет: {table.player.bank}')
 
     @staticmethod
-    def full_lose(table):
-        # Controller.view_table(table)
+    def full_lose():
         out_red('Вы проиграли игру, попробуйте ещё раз')
 
 

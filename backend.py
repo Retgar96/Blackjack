@@ -1,15 +1,7 @@
 import random
-from enum import Enum
-
-from exceptions import BetExcessError, BetNegativeError, BetTypeError
 import settings
 from card_templates import template as template_deck, Сard
-from dataclasses import dataclass
 
-
-# @dataclass
-# class Status:
-#     overdo :
 
 class Status:
     class Win:
@@ -34,38 +26,7 @@ class Status:
         pass
 
 
-#
-# class Score:
-#     def __init__(self, value):
-#         self._score = value
-#
-#     @property
-#     def score(self):
-#         return self._score
-#
-#     @score.setter
-#     def score(self, value):
-#         if value < 0:
-#             raise ValueError('Значение не может быть')
-#         self._score = value
-#
-#     @property
-#     def status(self):
-#         if self.score > 21:
-#             return 'overdo'
-#         if self.score < 0:
-#             raise ValueError('Статус не может быть отритцательным')
-# if
-
-
 class Player:
-    # def __new__(cls, bank):
-    #     if type(bank) not in ('int', 'float'):
-    #         pass
-    #     if bank < 1:
-    #         raise TypeError('Банк не может быть меньше меньше 1')
-    #
-    #     return super(Player, cls).__new__(cls)
 
     def __init__(self, bank):
         self._bet = None
@@ -113,48 +74,7 @@ class Player:
     def bank(self, value):
         if not isinstance(value, int):
             raise TypeError('Неверный формат')
-        # if value < 1:
-        #     raise ValueError('Банк не может быть меньше меньше 1')
-        #     raise PlayerLose('Игрок проиграл')
         self._bank = value
-
-    # def __add__(self, other):
-    #     if isinstance(other, (int, float)):
-    #         self._bank += other
-    #     elif isinstance(other, Сard):
-    #         self.hand = self.hand + other
-    #     return self
-
-    # def __radd__(self, other):
-    #     return self.__add__(other)
-    #
-    # def __iadd__(self, other):
-    #     return self.__add__(other)
-
-    # def __lt__(self, other):
-    #     if isinstance(other, int) or isinstance(other, float):
-    #         if self. < other:
-    #             return True
-    #         else:
-    #             return False
-
-    # elif isinstance(other, Hand):
-    #     if self.hand.value < other.value:
-    #         return True
-    #     else:
-    #         return False
-    # return self
-
-    # def __gt__(self, other):
-    #     self.__lt__(other)
-
-    # def __setattr__(self, name, value):
-    #     if name == 'bet':
-    #         if not isinstance(value, int or float) or value > 0:
-    #             raise BetTypeError
-    #         if value > self.bank:
-    #             raise BetExcessError
-    #         super.__setattr__(self, name, value)
 
     def win(self):
         self.bank += self.bet
@@ -168,17 +88,9 @@ class Player:
 
 
 class Dealer:
-    # __isInstance = False
-    #
-    # def __new__(cls, *args, **kwargs):
-    #     if not cls.__isInstance:
-    #         cls.__isInstance = super().__new__(cls)
-    #     return cls.__isInstance
 
     def __init__(self):
         self._hand = Hand()
-        # self._hand: Hand
-        # self.status = False
 
     @property
     def hand(self):
@@ -197,19 +109,11 @@ class Dealer:
     def __del__(self):
         self.__isInstance = False
 
-    # @hand.setter
-    # def hand(self, value):
-    #     self._hand  value
-
 
 class Hand:
     def __init__(self):
         self._cards: list = []
         self._score: int = 0
-
-    def __str__(self):
-        card_name = [x.name for x in self._cards]
-        return card_name
 
     def __add__(self, other):
         if not isinstance(other, Сard):
@@ -270,17 +174,9 @@ class Hand:
         if self.score > settings.DEALER_SCORE_STOP:
             return Status.DealerStop
 
-    # @cards.setter
-    # def cards(self, value):
-    #     self._cards = value
-
     @property
     def score(self):
         return self._calculate_score()
-
-    # @score.setter
-    # def value(self, value):
-    #     self._score = value
 
     def _calculate_score(self):
         arr_value = []
@@ -300,40 +196,8 @@ class Hand:
     def clean(self):
         self._cards = []
 
-    # @status.setter
-    # def status(self, value):
-    #     if isinstance(value, (Status.Overdo, Status.DealerMinimum, Status.Win)):
-    #         self.status = value
-
-
-# class Score:
-#     @staticmethod
-#     def calculate(cards):
-#         result = 0
-#         hand_value = []
-#         for card in cards:
-#             hand_value.append(card.value)
-#         hand_value.sort()
-#
-#         for value in hand_value:
-#             if value == 11 and (result + 11) > 21:
-#                 result += 1
-#             else:
-#                 result += value
-#
-#         return result
 
 class Table:
-    # __isInstance = False
-    #
-    # def __del__(self):
-    #     self.__isInstance = False
-    #
-    # def __new__(cls, *args, **kwargs):
-    #     if not cls.__isInstance:
-    #         cls.__isInstance = super().__new__(cls)
-    #     return cls.__isInstance
-
     def __init__(self, player: Player):
         self.player = player
         self.deck = Deck()
@@ -355,12 +219,6 @@ class Table:
 
     def check_player_balance(self):
         return self.player.bank > 0
-
-    # def check_bet(self):
-    #     if self.player.bet > self.player.bank:
-    #         raise BetExcessError
-    #     elif self.player.bet < 1:
-    #         raise BetNegativeError
 
     def deal_cards(self):
         self.dealer.hand += self.deck.get_card()
@@ -413,7 +271,3 @@ class Deck:
                 cards.append(card)
         random.shuffle(cards)
         self.__cards = cards
-
-
-class Rules:
-    pass
