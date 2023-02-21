@@ -1,3 +1,3 @@
 # Blackjack
 
-##Point of entry in manager.py
+##Point of entry in main.py

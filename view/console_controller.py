@@ -1,4 +1,4 @@
-from output_func import output, my_input, out_red, out_green, input_player_action
+from view.output_func import output, my_input, out_red, out_green, input_player_action
 
 
 class Controller:
@@ -35,11 +35,8 @@ class Controller:
 
     @staticmethod
     def lose_action(table):
-
         out_red(f'Ваша ставка проиграла -{table.player.bet}. Ваш баланс состовляет: {table.player.bank}')
 
     @staticmethod
     def full_lose():
         out_red('Вы проиграли игру, попробуйте ещё раз')
-
-
