@@ -27,3 +27,4 @@ class BetNegativeError(BetExceptions):
 class InputActionError(Exception):
     def __init__(self):
         output_func.out_red('Введите 1 или 0')
+

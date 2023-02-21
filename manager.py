@@ -1,93 +1,126 @@
-import console_controller as controller
-from backend import Table, Player, Hand, Deck
+from console_controller import Controller
+from backend import Table, Player, Hand, Deck, Status
 from exceptions import BetExceptions
 
 
 class Game:
-    def __init__(self):
-        self.table = Table(self.start_game())
+    def __init__(self, table: Table):
+        self.table = table
 
     def start_game(self):
-        while True:
-            player = Player(controller.get_bank())
-            controller.start_game()
-            self.table = Table(player)
-            self.play_round()
+        Controller.start_game()
+        self._play_round()
 
-    def play_round(self):
+    # def _create_player(self):
+    #     self.table = Player(Controller.get_bank())
+
+    # def _create_table(self):
+    #     self.table = Table(self._create_player())
+
+    def _play_round(self):
         while True:
-            if not self.table.check_balance():
-                controller.full_lose()
-                self.table.clear_hands()
+            if self.table.player.status == Status.FullLose:
+                Controller.full_lose(table)
                 break
-            try:
-                self.table.player.bet = controller.get_bet()
-                # table.check_bet()
-            except BetExceptions as e:
-                controller.error_message(e)
-                continue
-
+            self._place_bet()
             self.table.deal_cards()
-            controller.view_table(self.set_tabler_info())
-
-            if self.table.check_21_player():
-                self.win_player()
-                continue
+        # controller.view_table(self.set_tabler_info())
+            if self.table.player.hand.status == Status.Win:
+                self._win_player()
             else:
-                self.action_player()
-                continue
+                self._action_player()
+        # while True:
+        # if not self.table.check_player_balance():
+        #     self.controller.full_lose()
+        #     break
 
-    def action_player(self):
+        # self._check_21_player()
+
+        # if self.table.player.hand.status == Status.Win:
+        #     self._win_player()
+        #     continue
+        # else:
+        #     self._action_player()
+        #     continue
+
+    def _place_bet(self):
         while True:
-            if controller.action_bar():
+            try:
+                self.table.player.bet = Controller.get_bet()
+            except Exception as e:
+                Controller.error_message(e)
+                continue
+            break
+
+    # def _check_21_player(self):
+    #     pass
+
+    def _action_player(self):
+        while True:
+            Controller.view_table(self.table)
+            if Controller.action_bar():
                 self.table.add_card_player()
-                controller.view_table(self.set_tabler_info())
-                if self.table.check_break(self.table.player):
-                    self.lose_player()
-                else:
-                    self.set_tabler_info()
-                    continue
+                if self.table.player.hand.status == Status.Overdo:
+                    self._lose_player()
+                    # self.controller.view_table()
+                    # if self.table.player.status == Status.FullLose:
+                        # Controller.view_table(table)
+                        # Controller.full_lose(table)
+                    break
+                continue
             else:
-                self.action_dealer()
+                self._action_dealer()
                 break
 
-    def action_dealer(self):
+    def _action_dealer(self):
         while True:
-            if self.table.check_break(self.table.hand_dealer): ##### Дописать класс!!!!
-                self.win_player()
-                break
+            # if self.table.check_break(): ##### Дописать класс!!!!
+            #     self._win_player()
+            #     break
+            # else:
+            #     if self.table.check_score_dealer():
+            self.table.add_card_dealer()
+            if self.table.dealer.hand.status == Status.DealerPlaying:
+                # self.controller.view_table(self.set_tabler_info())
+                Controller.view_table(self.table)
+                continue
+            elif self.table.dealer.hand.status == Status.Win:
+                self._lose_player()
+            elif self.table.dealer.hand.status == Status.Overdo:
+                self._win_player()
             else:
-                if self.table.check_score_dealer():
-                    self.table.add_card_dealer()
-                    controller.view_table(self.set_tabler_info())
-                    continue
+                if self.table.dealer.hand.score > self.table.player.hand.score:
+                    self._lose_player()
                 else:
-                    if self.table.hand_dealer > self.table.player.hand:
-                        self.lose_player()
-                        break
-                    else:
-                        self.win_player()
-                        break
+                    self._win_player()
+            break
 
-    def win_player(self):
+    def _win_player(self):
+        Controller.view_table(self.table)
         self.table.player.win()
-        controller.win_action(bet=self.table.player.bet, bank=self.table.player.bank)
+        Controller.win_action(self.table)
+        self.table.clear_hands()
 
-    def lose_player(self):
+    def _lose_player(self):
+        Controller.view_table(self.table)
         self.table.player.lose()
-        controller.lose_action(self.table.player.bet, self.table.player.bank)
+        Controller.lose_action(self.table)
+        self.table.clear_hands()
 
-    def set_tabler_info(self):
-        table = {'bank': self.table.player.bank, 'dealer':
-            {'card': self.table.hand_dealer,
-             'score': self.table.get_score_dealer()},
-                 'player': {'card': self.table.player.hand,
-                            'score': self.table.player.hand.value}
-                 }
-
-        return table
+    # def _set_tabler_info(self):
+    #     table = {'bank': self.table.player.bank, 'dealer':
+    #         {'card': self.table.hand_dealer,
+    #          'score': self.table.get_score_dealer()},
+    #              'player': {'card': self.table.player.hand,
+    #                         'score': self.table.player.hand.value}
+    #              }
+    #
+    #     return table
 
 
 if __name__ == '__main__':
-    game = Game()
-    game.start_game()
+    while True:
+        player = Player(Controller.get_bank())
+        table = Table(player)
+        game = Game(table)
+        game.start_game()
