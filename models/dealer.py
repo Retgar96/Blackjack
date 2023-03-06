@@ -20,5 +20,3 @@ class Dealer:
     def __iadd__(self, other):
         return self.__add__(other)
 
-    def __del__(self):
-        self.__isInstance = False

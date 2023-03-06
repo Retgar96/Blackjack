@@ -71,14 +71,12 @@ class Hand:
     def score(self):
         return self._calculate_score()
 
-    def _calculate_score(self):
-        arr_value = []
-        score = 0
-        for card in self.cards:
-            arr_value.append(card.value)
-        arr_value.sort()
+    def _get_value_cards(self):
+        return sorted(card.value for card in self.cards)
 
-        for value in arr_value:
+    def _calculate_score(self):
+        score = 0
+        for value in self._get_value_cards():
             if value == 11 and (self._score + 11) > 21:
                 score += 1
             else:
