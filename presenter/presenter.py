@@ -5,12 +5,10 @@ from models.player import Player
 
 
 class Game:
-    def __init__(self):
-        self._desk = None
+    def __init__(self, player):
+        self._desk = Desk(player)
 
     def start_game(self):
-        player = Player(Controller.get_bank())
-        self._desk = Desk(player)
         Controller.start_game()
         self._play_round()
 
