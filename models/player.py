@@ -2,38 +2,27 @@ from models.status import Status
 from models.hand import Hand
 
 
-class Player:
+class Bet:
 
-    def __init__(self, bank):
-        self._bet = None
-        self._bank = bank
-        self._hand = Hand()
+    def __get__(self, instance, owner):
+        return instance.value
 
-    @property
-    def bet(self):
-        return self._bet
-
-    @bet.setter
-    def bet(self, value):
+    def __set__(self, instance, value):
         if not isinstance(value, int):
             raise TypeError('Неверный тип')
         if value < 0:
             raise ValueError('Отрицательное значение')
-        if value > self.bank:
+        if value > instance.bank:
             raise ValueError('Ставка не может привышать размер банка')
+        instance.value = value
 
-        self._bet = value
 
-    @property
-    def hand(self):
-        return self._hand
+class Player:
+    bet = Bet()
+    hand = Hand()
 
-    @hand.setter
-    def hand(self, value):
-        if isinstance(value, Hand):
-            self._hand = value
-        else:
-            raise TypeError('В руку можно положить только карты')
+    def __init__(self, bank):
+        self._bank = bank
 
     @property
     def status(self):
@@ -46,17 +35,11 @@ class Player:
     def bank(self):
         return self._bank
 
-    @bank.setter
-    def bank(self, value):
-        if not isinstance(value, int):
-            raise TypeError('Неверный формат')
-        self._bank = value
-
     def win(self):
-        self.bank += self.bet
+        self._bank += self.bet
 
     def lose(self):
-        self.bank -= self.bet
+        self._bank -= self.bet
         if not self._bank > 0:
             return Status.FullLose
         else:
