@@ -1,8 +1,3 @@
-
-# name_variations = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'D', 'K']
-# value_variations = [x for x in range(1, 10)]
-
-
 import unittest
 from models.card import Card
 from models.status import Status
@@ -45,6 +40,11 @@ class TestHand(unittest.TestCase):
             self.hand += card
         self.assertEqual(self.hand.score, 21)
 
+    def test_calculate_score_with_three_aces(self):
+        for card in [Card('A', 11), Card('A', 11), Card('A', 11)]:
+            self.hand += card
+        self.assertEqual(self.hand.score, 13)
+
     def test_status_overdo(self):
         for card in [Card('9', 9), Card('D', 10), Card('D', 10)]:
             self.hand += card
@@ -75,6 +75,7 @@ class TestHand(unittest.TestCase):
 
     def tearDown(self):
         self.hand = None
+
 
 if __name__ == '__main__':
     unittest.main()
