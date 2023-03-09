@@ -1,32 +1,70 @@
-import console_controller as controller
-from backend import GameTable
+import console_controller as view
+from backend import Table
 from exceptions import BetExceptions
+
+
+class Presenter:
+    def __init__(self):
+        self.table = Table()
+        self.view = view
+        self.__new_game()
+
+    def __new_game(self):
+        while True:
+            self.table = Table()
+            self.view.start_game()
+            self.table.bank = view.get_bank()
+            self.__play_round()
+
+    def __play_round(self):
+        while True:
+            if not self.table.check_balance():
+                self.view.full_lose()
+                break
+            self.table.clear_hands()
+            bet = view.get_bet()
+            self.table.bet = bet
+            try:
+                self.table.check_bet()
+            except BetExceptions as e:
+                view.error_message(e)
+                continue
+
+            self.table.deal_cards()
+            view.view_table(set_tabler_info(self.table))
+            if self.table.check_21_player():
+                win_player(self.table)
+                continue
+            else:
+                action_player(self.table)
+                continue
+
 
 
 def start():
     while True:
-        game_table = GameTable()
-        controller.start_game()
-        game_table.bank = controller.get_bank()
+        game_table = Table()
+        view.start_game()
+        game_table.bank = view.get_bank()
         play_round(game_table)
 
 
 def play_round(game_table):
     while True:
         if not game_table.check_balance():
-            controller.full_lose()
+            view.full_lose()
             break
         game_table.clear_hands()
-        bet = controller.get_bet()
+        bet = view.get_bet()
         game_table.bet = bet
         try:
             game_table.check_bet()
         except BetExceptions as e:
-            controller.error_message(e)
+            view.error_message(e)
             continue
 
         game_table.deal_cards()
-        controller.view_table(set_tabler_info(game_table))
+        view.view_table(set_tabler_info(game_table))
         if game_table.check_21_player():
             win_player(game_table)
             continue
@@ -37,9 +75,9 @@ def play_round(game_table):
 
 def action_player(game_table):
     while True:
-        if controller.action_bar():
+        if view.action_bar():
             game_table.add_card_player()
-            controller.view_table(set_tabler_info(game_table))
+            view.view_table(set_tabler_info(game_table))
             if game_table.check_break_player():
                 lose_player(game_table)
                 break
@@ -59,7 +97,7 @@ def action_dealer(game_table):
         else:
             if game_table.check_score_dealer():
                 game_table.add_card_dealer()
-                controller.view_table(set_tabler_info(game_table))
+                view.view_table(set_tabler_info(game_table))
                 continue
             else:
                 if game_table.get_score_dealer() > game_table.get_score_player():
@@ -72,12 +110,12 @@ def action_dealer(game_table):
 
 def win_player(game_table):
     game_table.add_bet()
-    controller.win_action(bet=game_table.bet, bank=game_table.bank)
+    view.win_action(bet=game_table.bet, bank=game_table.bank)
 
 
 def lose_player(game_table):
     game_table.minus_bet()
-    controller.lose_action(game_table.bet, game_table.bank)
+    view.lose_action(game_table.bet, game_table.bank)
 
 
 def set_tabler_info(game_table):

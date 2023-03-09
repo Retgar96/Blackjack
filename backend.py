@@ -5,7 +5,7 @@ import settings
 from card_templates import template as template_deck
 
 
-class GameTable:
+class Table:
 
     def __init__(self):
         self.deck = Deck()
