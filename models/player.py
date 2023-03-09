@@ -22,6 +22,10 @@ class Player:
     hand = Hand()
 
     def __init__(self, bank):
+        if not isinstance(bank, int):
+            raise TypeError()
+        if bank < 1:
+            raise ValueError('Банк не может быть отритцательным')
         self._bank = bank
 
     @property

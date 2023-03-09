@@ -1,7 +1,7 @@
+import settings
 from view.console_controller import Controller
 from models.desk import Desk
 from models.status import Status
-from models.player import Player
 
 
 class Game:
@@ -23,6 +23,8 @@ class Game:
                 self._win_player()
             else:
                 self._action_player()
+            if settings.DEBUG:
+                break
 
     def _place_bet(self):
         while True:
@@ -30,6 +32,8 @@ class Game:
                 self._desk.player.bet = Controller.get_bet()
             except Exception as e:
                 Controller.error_message(e)
+                if settings.DEBUG:
+                    break
                 continue
             break
 
@@ -41,6 +45,8 @@ class Game:
                 if self._desk.player.hand.status == Status.Overdo:
                     self._lose_player()
                     break
+                if settings.DEBUG:
+                    break
                 continue
             else:
                 self._action_dealer()
@@ -51,6 +57,8 @@ class Game:
             self._desk.add_card_dealer()
             if self._desk.dealer.hand.status == Status.DealerPlaying:
                 Controller.view_table(self._desk)
+                if settings.DEBUG:
+                    break
                 continue
             elif self._desk.dealer.hand.status == Status.Win:
                 self._lose_player()

@@ -1,10 +1,22 @@
 from dataclasses import dataclass
 
 
+
+# template_name_card = []
+# template_value_card = []
+
+
 @dataclass(frozen=True)
 class Card:
     name: str
     value: int
+
+    # def __setattr__(self, key, value):
+    #     if key == 'name':
+    #         if value in template_name_card:
+    #             self.__dict__.keys() = value
+    #     if key == 'value':
+    #         if value in template_value_card
 
 
 template = {

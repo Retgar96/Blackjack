@@ -4,6 +4,15 @@ import random
 
 
 class Deck:
+    _instance = None
+
+    def __new__(cls):
+        if not cls._instance:
+            cls._instance = super().__new__(cls)
+            cls._instance._cards = []
+            cls._instance._create_deck()
+        return cls._instance
+
     def __init__(self):
         self._cards = []
         self._create_deck()
@@ -15,7 +24,7 @@ class Deck:
         return len(self._cards)
 
     def get_card(self):
-        if len(self._cards) < (settings.COUNT_CARD_IN_NORM_DECK * settings.COUNT_DECKS / 2):
+        if len(self._cards) <= (settings.COUNT_CARD_IN_NORM_DECK * settings.COUNT_DECKS / 2):
             self._create_deck()
         return self._cards.pop(0)
 
