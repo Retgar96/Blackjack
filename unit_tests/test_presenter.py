@@ -1,5 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
+
+import settings
 from models.player import Player
 from presenter.presenter import Game
 from models.status import Status
@@ -9,6 +11,10 @@ class TestGame(unittest.TestCase):
     def setUp(self):
         self.player = Player(100)
         self.game = Game(self.player)
+        settings.DEBUG = True
+
+    def tearDown(self):
+        settings.DEBUG = False
 
     @patch('presenter.presenter.Game._play_round')
     @patch('presenter.presenter.Controller.start_game')
