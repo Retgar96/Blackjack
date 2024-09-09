@@ -17,13 +17,12 @@ class Bet:
         instance.value = value
 
 
+
 class Player:
     bet = Bet()
     hand = Hand()
 
-    def __init__(self, bank):
-        if not isinstance(bank, int):
-            raise TypeError()
+    def __init__(self, bank: int): 
         if bank < 1:
             raise ValueError('Банк не может быть отритцательным')
         self._bank = bank
